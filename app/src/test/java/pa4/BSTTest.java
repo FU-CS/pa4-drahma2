@@ -6,7 +6,6 @@ package pa4;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-// Dummy change
 class BSTTest {
 
     @Test
@@ -19,11 +18,24 @@ class BSTTest {
         assertEquals("3 5 ", bst.inOrder());
         bst.insert(7);
         assertEquals("3 5 7 ", bst.inOrder());
-
-        // Test connections 
         assertEquals(5, bst.root.value);
         assertEquals(3, bst.root.left.value);
         assertEquals(7, bst.root.right.value);
+    }
+
+    @Test
+    void testSearch() {
+        BST bst = new BST();
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(7);
+        assertEquals(true, bst.search(5));
+        assertEquals(true, bst.search(3));
+        assertEquals(true, bst.search(7));
+        assertEquals(false, bst.search(1));
+        assertEquals(false, bst.search(16));
+        assertEquals(false, bst.search(2));
+
     }
 
     @Test
@@ -38,21 +50,97 @@ class BSTTest {
         assertEquals("7 ", bst.inOrder());
         bst.delete(7);
         assertEquals("", bst.inOrder());
-
-        // Test connections
         assertNull(bst.root);
-
         bst.insert(5);
         bst.insert(3);
         bst.insert(7);
         bst.insert(2);
         bst.insert(4);
         bst.insert(6);
-
         bst.delete(4);
         assertEquals("2 3 5 6 7 ", bst.inOrder());
         assertEquals(3, bst.root.left.value);
         assertEquals(null, bst.root.left.right);
     }
+    @Test
+    void testSortedArrayToBST() {
+        int[] values = {1, 2, 3, 4, 5, 6, 7};
+        BST.Node root = BST.sortedArrayToBST(values);
+        assertEquals(4, root.value);
+        assertEquals(2, root.left.value); 
+        assertEquals(6, root.right.value);
+        assertEquals(1, root.left.left.value); 
+        assertEquals(3, root.left.right.value); 
+        assertEquals(5, root.right.left.value); 
+        assertEquals(7, root.right.right.value); 
+    }
 
+    @Test
+    void testSortedArrayToBSTEmpty() {
+        int[] values = {};
+        BST.Node root = BST.sortedArrayToBST(values);
+        assertEquals(null, root);
+    }
+    @Test
+    void testSortedArrayToBSTOne() {
+        int[] values = {1};
+        BST.Node root = BST.sortedArrayToBST(values);
+        assertEquals(1, root.value);
+        assertEquals(null, root.left); 
+        assertEquals(null, root.right);
+    }
+
+    @Test
+    void testUpdate(){
+        BST bst = new BST();
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(7);
+        bst.update(3, 4);
+        assertEquals("4 5 7 ", bst.inOrder());
+        bst.update(10, 8);
+        assertEquals("4 5 7 ", bst.inOrder());
+        bst.update(5, 6);
+        assertEquals("4 6 7 ", bst.inOrder());
+    }
+    @Test
+    void testLowestCommonAncestor() {
+        BST bst = new BST();
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(7);
+        bst.insert(2);
+        bst.insert(4);
+        assertEquals(3, bst.lowestCommonAncestor(2, 3).value);
+        assertEquals(3, bst.lowestCommonAncestor(3, 3).value);
+        assertEquals(3, bst.lowestCommonAncestor(2, 4).value);
+    }
+    @Test
+    void testDeleteToEmpty() {
+        BST bst = new BST();
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(7);
+        bst.insert(2);
+        bst.insert(4);
+        bst.insert(6);
+        bst.insert(8);
+        assertEquals("2 3 4 5 6 7 8 ", bst.inOrder());
+        bst.delete(2);
+        assertEquals("3 4 5 6 7 8 ", bst.inOrder());
+        bst.delete(3);
+        assertEquals("4 5 6 7 8 ", bst.inOrder());
+        bst.delete(5);
+        assertEquals("4 6 7 8 ", bst.inOrder());
+        bst.delete(7);
+        assertEquals("4 6 8 ", bst.inOrder());
+        bst.delete(10);
+        assertEquals("4 6 8 ", bst.inOrder());
+        bst.delete(4);
+        assertEquals("6 8 ", bst.inOrder());
+        bst.delete(6);
+        assertEquals("8 ", bst.inOrder());
+        bst.delete(8);
+        assertEquals("", bst.inOrder());
+    }
 }
